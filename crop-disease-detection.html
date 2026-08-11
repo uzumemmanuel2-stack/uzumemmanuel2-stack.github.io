@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crop Disease Detection — Gambit</title>
+  <meta name="description" content="Offline-first crop disease detection for smallholder farmers. How a design review caught a dataset-contamination flaw before any code existed to cause it." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="../index.html">gambit /</a>
+      <nav>
+        <a href="../index.html#work">work</a>
+        <a href="mailto:uzumemmanuel2@gmail.com">contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" style="padding-bottom: var(--space-4);">
+      <div class="wrap">
+        <a class="back-link" href="../index.html#work">&larr; back to work</a>
+        <span class="eyebrow">Case study</span>
+        <h1>Crop disease detection — offline-first, on-device</h1>
+        <p class="lede">
+          An app that helps farmers diagnose and treat crop disease, built for
+          low-connectivity fields, not clean lab conditions.
+        </p>
+      </div>
+    </section>
+
+    <section style="padding-top: 0;">
+      <div class="wrap">
+
+        <div class="decision-log">
+
+          <div class="log-field">
+            <span class="field-label">Problem</span>
+            <p>
+              Farmers who already suspect something's wrong with a plant have no fast,
+              reliable way to get an accurate answer. Common practice is comparing notes
+              with other farmers who've seen something similar — slow, informal, and
+              often wrong.
+            </p>
+          </div>
+
+          <div class="log-field">
+            <span class="field-label">Decision</span>
+            <p>
+              Optimized for reliability in the field over lab-benchmark accuracy:
+              on-device inference (MobileNetV2, TFLite, offline-first) instead of a
+              cloud-only model, so a diagnosis doesn't depend on a signal. That trades
+              peak accuracy and easy model updates for something farmers can actually
+              use every day, no connection required.
+            </p>
+            <p>
+              While reviewing my own design, I caught a flaw: my pipeline let any
+              expert-verified case flow straight into the retraining dataset, on the
+              assumption that "diagnosis correct" meant "good training example." It
+              doesn't. An agronomist can correctly diagnose Late Blight from a dark,
+              blurry photo using experience and context — the diagnosis is right, but
+              the image is a poor training sample: low resolution, maybe duplicated,
+              missing the features the model needs to learn from. Feeding every
+              verified case into training would have slowly contaminated the dataset.
+              I split the flow into two separate questions — is the diagnosis correct,
+              and separately, is this image worth training on — and added a second
+              approval step for the second question.
+            </p>
+          </div>
+
+          <div class="log-field">
+            <span class="field-label">Outcome</span>
+            <p>
+              Avoided a specific failure mode — dataset contamination — before any
+              code existed to cause it. The project is currently at
+              repo-scaffold-and-decision-log stage: a real architecture decision
+              record, no dataset or model code yet.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="section-head" style="margin-top: var(--space-5);">
+          <span class="eyebrow">Before / after</span>
+          <h2>Editing out the generic line</h2>
+        </div>
+
+        <div class="compare">
+          <div class="compare-block before">
+            <span class="field-label">Before</span>
+            <p>"It helps farmers in early detection of diseases... Gives farmers real time solution, especially where internet network is poor."</p>
+          </div>
+          <div class="compare-block after">
+            <span class="field-label">After</span>
+            <p>"Farmers who already suspect something's wrong with a plant have no fast way to get a reliable answer — they compare notes with other farmers, which is slow and often wrong. I built for that gap: offline-first, on-device, so a diagnosis doesn't depend on a signal."</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Want to see how I test a model before I trust it? Email me at
+        <a href="mailto:uzumemmanuel2@gmail.com">uzumemmanuel2@gmail.com</a> and I'll walk you through it.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
